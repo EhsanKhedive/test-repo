@@ -1,0 +1,10 @@
+"0","View(multiplot)"
+"0","pdf (""multiplot.pdf"")"
+"0","pdf (multiplot, ""multiplot.pdf"")"
+"2","Warning:"
+"2"," ‘mode(width)’ differs between new and previous
+	 ==> NOT changing ‘width’
+"
+"0","?pdf"
+"0","pdf (""multiplot.pdf"")"
+"0","multiplot  "

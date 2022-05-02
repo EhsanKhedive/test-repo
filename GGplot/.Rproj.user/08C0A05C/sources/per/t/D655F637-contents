@@ -1,0 +1,24 @@
+---
+title: "GGplotAssignment"
+author: "Ehsan Khedive"
+date: "4/27/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Smooth spline on iris dataset
+
+In this assignment I tried to visualize a smooth spline regression on iris data set using `glm` method as the best way to visualize this data set is to use scatterplots. Using `facet_grid` argument I divided the graphs based on the species type. Petal length also was added as a legend. 
+
+```{r}
+summary(iris)
+str(iris)
+library(ggplot2)
+library(viridis)
+ggplot (data=iris, aes(x=Sepal.Length/1000, y=Sepal.Width, color=Petal.Length))+ geom_point(size=0.5) + geom_smooth(method = "glm") + scale_color_viridis() + scale_y_log10() + xlab("Sepal Length") + ylab("Sepal Width") + theme_bw() + scale_x_continuous (breaks=c(0,75,150)) + facet_grid(~Species)
+
+```
+

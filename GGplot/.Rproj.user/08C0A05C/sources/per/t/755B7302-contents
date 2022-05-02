@@ -1,0 +1,59 @@
+---
+title: "GGplot"
+author: Ehsan Khedive
+date: "04/25/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## 1. Importing and handling summary of RNA-Seq data
+
+Here I imported a summary of RNA-seq data using `read.delim` and then converted Region to factor using `as.factor`. Finally I printed the structure and first 5 rows of the data and selected the chromosome 21 for graphing purposes.
+
+```{r}
+library(ggplot2)
+RNAseq = read.delim ("SlidingWindow.txt")
+str(RNAseq)
+RNAseq$Region = as.factor(RNAseq$Region)
+RNAseq$Region = factor(RNAseq$Region, levels = c("genic", "intergenic"))
+str(RNAseq)
+RNAseq[1:5,]
+RNAseq_chrom21 = RNAseq[which(RNAseq$Chrom==21),]
+```
+
+## 2. Creating the plot and layout
+
+In this step I laid out the plot step by step and then graphed the data using `ggplot` command and named it **singlePlot**.
+```{r}
+singlePlot = ggplot (data=RNAseq_chrom21, aes(x=Pos, y=RCM))
+plot (RNAseq_chrom21$Pos, RNAseq_chrom21$RCM)
+singlePlot = ggplot (data=RNAseq_chrom21, aes(x=Pos, y=RCM)) + geom_point()
+singlePlot = ggplot (data=RNAseq_chrom21, aes(x=Pos, y=RCM, color=Region)) + geom_point()
+singlePlot + scale_color_manual(values=c("red", "black"))
+singlePlot2 = ggplot (data=RNAseq_chrom21, aes(x=Pos, y=RCM, color=Enrichment)) + geom_point()
+singlePlot2
+```
+
+## 3. Customizing plots
+
+Customization was done using `viridis` library to create a new color theme on the chart. Chart axis also was added using `xlab` and `ylab` commands.
+```{r}
+library(viridis)
+singlePlot2 + scale_color_viridis()
+ggplot (data=RNAseq_chrom21, aes(x=Pos, y=RCM, color=Enrichment)) + geom_point() + scale_color_viridis() + scale_y_log10()
+ggplot (data=RNAseq_chrom21, aes(x=Pos/1000, y=RCM, color=Enrichment)) + geom_point(size=0.5) + scale_color_viridis() + scale_y_log10() + xlab("Nucleotide Position (kb)") + ylab("Read Count Per Million") + theme_bw()
+```
+
+## 4. Creating panel chart for all chromosomes
+
+Using `facet_wrap` option and defining chromosome number in this option I creted a panel chart of 7 rows for all of the chromosomes.
+
+``` {r}
+ggplot (data=RNAseq, aes(x=Pos/1000, y=RCM, color=Enrichment)) + geom_point(size=0.5) + scale_color_viridis() + scale_y_log10() + xlab("Nucleotide Position (kb)") + ylab("Read Count Per Million") + theme_bw() + scale_x_continuous (breaks=c(0,75,150)) + facet_wrap(~Chrom, nrow=7) 
+#pdf ("multiplot.pdf")
+#multiplot  
+#dev.off()
+```
